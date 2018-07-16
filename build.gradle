@@ -1,0 +1,32 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.2.51"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+}
+
+def kotlinVersion = '1.2.51'
+def coroutineVersion = "0.23.4"
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile wpilib()
+    compile navx()
+    compile ctre()
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
+}
