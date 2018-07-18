@@ -26,6 +26,7 @@ dependencies {
     compile navx()
     compile ctre()
 
+    compile 'org.knowm.xchart:xchart:3.4.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
     compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
