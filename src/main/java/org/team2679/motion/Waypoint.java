@@ -1,8 +1,8 @@
-package org.team2679.motion.spline;
+package org.team2679.motion;
 
 public class Waypoint {
 
-    private double x,y,angle = 0;
+    private double x,y,angle,velocity,acceleration = 0;
 
     public Waypoint(double x, double y, double angle){
         this.x = x;
