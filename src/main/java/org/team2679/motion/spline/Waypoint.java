@@ -2,12 +2,12 @@ package org.team2679.motion.spline;
 
 public class Waypoint {
 
-    private double x,y,theta = 0;
+    private double x,y,angle = 0;
 
-    public Waypoint(double x, double y, double theta){
+    public Waypoint(double x, double y, double angle){
         this.x = x;
         this.y = y;
-        this.theta = theta;
+        this.angle = angle;
     }
 
     public double getX(){
@@ -16,7 +16,7 @@ public class Waypoint {
     public double getY(){
         return this.y;
     }
-    public double getTheta(){
-        return this.theta;
+    public double getAngle(){
+        return this.angle;
     }
 }
