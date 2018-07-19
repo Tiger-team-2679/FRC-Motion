@@ -6,19 +6,20 @@ import org.knowm.xchart.XYChart;
 import org.team2679.motion.spline.Cubic;
 import org.team2679.motion.spline.Spline;
 
+import java.sql.SQLOutput;
+
 public class main {
     public static void main(String args[]){
         double startTime = System.nanoTime();
 
         Spline spline = new Spline(new Waypoint[]{
                 new Waypoint(0,0,0),
-                new Waypoint(9,5,70),
-                new Waypoint(10,10,89),
-                new Waypoint(25,10,0),
-                new Waypoint(45,0,0),
+                new Waypoint(10,10,70),
+                new Waypoint(11, 20 , 90),
+                new Waypoint(7, 25 , 120)
         }, Spline.SPLINE_TYPE.QUINTIC);
 
-        Waypoint[] path = spline.getSamples(500);
+        Waypoint[] path = spline.getSamples(1000);
 
         double now = System.nanoTime();
 
@@ -28,11 +29,6 @@ public class main {
             xpoints[i] = path[i].getX();
             ypoints[i] = path[i].getY();
         }
-
-        XYChart chart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)",  xpoints, ypoints);
-
-        new SwingWrapper(chart).displayChart();
-
 
 
         System.out.println("elapse time = " + ((now - startTime)/1e6));

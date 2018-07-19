@@ -34,36 +34,14 @@ public class Spline {
         this.type = type;
     }
 
-    public double getLength(){
-        if(this.length > 0){
-            return this.length;
-        }
-        for(Polynomial polynomial: splines){
-            this.length += polynomial.getLength();
-        }
-        return this.length;
-    }
-
-    public double getXLength(){
-        if(this.length > 0){
-            return this.length;
-        }
-        for(Polynomial polynomial: splines){
-            this.length += polynomial.getEndPoint().getX() - polynomial.getStartPoint().getX();
-        }
-        return this.length;
-    }
-
     public Waypoint[] getSamples(int amount){
-        Waypoint[] path = new Waypoint[amount];
-        double u = splines[0].getStartPoint().getX();
-        int currSplineIndex = 0;
-        for (int j = 0; j < path.length; j += 1) {
-            u += getXLength()/path.length;
-            if(u > splines[currSplineIndex].getEndPoint().getX() && currSplineIndex + 1 < splines.length){
-                currSplineIndex+=1;
+        Waypoint[] path = new Waypoint[amount*splines.length];
+        for(int i = 0; i < splines.length; i++) {
+            double u = 0;
+            for (int j = 0; j < amount; j += 1) {
+                u += (double) 1 / amount;
+                path[i*amount + j] = splines[i].getWaypointByPrecent(u);
             }
-            path[j] = new Waypoint(u, splines[currSplineIndex].getYByX(u), splines[currSplineIndex].getAngleByX(u));
         }
         return path;
     }
