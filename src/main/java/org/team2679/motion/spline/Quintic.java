@@ -7,37 +7,53 @@ public class Quintic extends Polynomial {
     private int samples = 10000;
 
     private double a,b,c,d,e,f = 0;
-    private double tangent1, tangent2;
-    private double x0, y0, x1, y1;
-    private double angle1 = 0;
-    private double angle2 = 0;
 
-    private double length = 0;
+    private double tangent1, tangent2;
+    private double angle1, angle2 = 0;
+    private double x0, y0, x1, y1;
+
+    private double angleOffset;
+    private double xOffset;
+    private double yOffset;
 
     private Waypoint startPoint = null;
     private Waypoint endPoint = null;
+    private Waypoint offsetEndPoint = null;
+    private Waypoint offsetStartPoint = null;
 
     public Quintic(Waypoint startPoint, Waypoint endPoint){
-        this.x0 = startPoint.getX();
-        this.x1 = endPoint.getX();
-        this.y0 = startPoint.getY();
-        this.y1 = endPoint.getY();
 
-        this.angle1 = startPoint.getAngle();
-        this.angle2 = endPoint.getAngle();
-
+        /* handle offset stuff */
         this.startPoint = startPoint;
         this.endPoint = endPoint;
 
-        if(angle1 > 90 || angle1 < -90 || angle2 > 90 || angle2 < -90){
-            throw new RuntimeException("Angles must be between -90 and 90");
+        this.angleOffset = startPoint.getAngle();
+        this.xOffset = this.startPoint.getX();
+        this.yOffset = this.startPoint.getY();
+
+        this.offsetEndPoint = Waypoint.rotate(endPoint, this.angleOffset, this.xOffset, this.yOffset, false);
+        this.offsetStartPoint = Waypoint.rotate(startPoint, this.angleOffset, this.xOffset, this.yOffset ,false);
+
+        this.angle1 = offsetStartPoint.getAngle();
+        this.angle2 = offsetEndPoint.getAngle();
+
+        this.x0 = this.offsetStartPoint.getX();
+        this.x1 = this.offsetEndPoint.getX();
+        this.y0 = this.offsetStartPoint.getY();
+        this.y1 = this.offsetEndPoint.getY();
+
+        /* handle exceptions */
+        if(angle1 >= 90 || angle1 <= -90 || angle2 >= 90 || angle2 <= -90){
+            throw new RuntimeException("Angles must be relatively between -90 and 90");
         }
-        if(x0 - x1 >= 0){
-            throw new RuntimeException("X values of waypoints must be growing");
+        if(x0 - x1 == 0){
+            throw new RuntimeException("X value points can't be the same");
         }
 
-        this.tangent1 = Math.tan(Math.toRadians(angle1));
-        this.tangent2 = Math.tan(Math.toRadians(angle2));
+        // calculates the equation now that it's with the offset
+
+        this.tangent1 = Math.tan(Math.toRadians(this.offsetStartPoint.getAngle()));
+        this.tangent2 = Math.tan(Math.toRadians(this.offsetEndPoint.getAngle()));
 
         this.a = (6* y1 - 3* x1 *(tangent2 + tangent1) + 3*(tangent2 + tangent1)* x0 - 6* y0)/Math.pow((x1 - x0), 5);
         this.b = (8*Math.pow(x1,2)* tangent1 + tangent2 *(7*Math.pow(x1,2) + x1 * x0 - 8*Math.pow(x0,2)) - x0 *(15* y1 + 7* tangent1 * x0 - 15* y0) + x1 *(-15* y1 - tangent1 * x0 + 15* y0))/Math.pow((x1 - x0),5);
@@ -48,51 +64,14 @@ public class Quintic extends Polynomial {
     }
 
     @Override
-    public double getLength() {
-        if (this.length > 0) {
-            return this.length;
-        }
+    public Waypoint getWaypointByPrecent(double percent){
+        double length = this.offsetEndPoint.getX() - this.offsetStartPoint.getX();
+        percent = Math.max(Math.min(percent, 1), 0);
 
-        double length = 0;
-        double deltaX = Math.abs(x1 - x0);
+        double x = length * percent;
+        double y = a*Math.pow(x, 5) + b*Math.pow(x, 4) + c*Math.pow(x, 3) + d*Math.pow(x, 2) + e*x + f;
+        double angle = Math.toDegrees(Math.atan(5*a*Math.pow(x, 4) + 4*b*Math.pow(x, 3) + 3*c*Math.pow(x, 2) + 2*d*x + e));
 
-        double lastPoint[] = new double[2];
-        double currentPoint[] = new double[2];
-
-        for (double i = 0; i <= deltaX; i += deltaX/this.samples) {
-            currentPoint[0] = i;
-            currentPoint[1] = getYByX(x0 + i);
-
-            length += Math.sqrt(Math.pow(lastPoint[0] - currentPoint[0], 2) + Math.pow(lastPoint[1] - currentPoint[1], 2));
-
-            lastPoint[0] = currentPoint[0];
-            lastPoint[1] = currentPoint[1];
-        }
-
-        this.length = length;
-        return length;
-    }
-
-    @Override
-    public double getYByX(double x){
-        return a*Math.pow(x, 5) + b*Math.pow(x, 4) + c*Math.pow(x, 3) + d*Math.pow(x, 2) + e*x + f;
-    }
-
-    @Override
-    public double getDerivativeByX(double x){
-        return 5*a*Math.pow(x, 4) + 4*b*Math.pow(x, 3) + 3*c*Math.pow(x, 2) + 2*d*x + e;
-    }
-
-    @Override
-    public double getAngleByX(double x){
-        return Math.toDegrees(Math.atan(getDerivativeByX(x)));
-    }
-
-    @Override
-    public Waypoint getStartPoint(){ return this.startPoint; }
-
-    @Override
-    public Waypoint getEndPoint(){
-        return this.endPoint;
+        return Waypoint.rotate(x, y, angle, angleOffset, xOffset, yOffset, true);
     }
 }
