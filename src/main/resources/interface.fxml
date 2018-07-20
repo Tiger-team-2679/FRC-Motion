@@ -24,7 +24,7 @@
          <children>
             <ImageView  id="fieldImage" fitHeight="500.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
             </ImageView>
-            <GridPane GridPane.rowIndex="1">
+            <GridPane id="bottomGrid" GridPane.rowIndex="1">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

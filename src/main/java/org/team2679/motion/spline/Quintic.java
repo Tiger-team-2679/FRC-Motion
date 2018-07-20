@@ -5,31 +5,25 @@ import org.team2679.motion.Waypoint;
 public class Quintic extends Polynomial {
 
     private int samples = 10000;
+    private double length;
 
-    private double a,b,c,d,e,f = 0;
+    private double a,b,c,d,e,f;
 
     private double tangent1, tangent2;
-    private double angle1, angle2 = 0;
+    private double angle1, angle2;
     private double x0, y0, x1, y1;
 
     private double angleOffset;
     private double xOffset;
     private double yOffset;
 
-    private Waypoint startPoint = null;
-    private Waypoint endPoint = null;
-    private Waypoint offsetEndPoint = null;
-    private Waypoint offsetStartPoint = null;
+    private Waypoint offsetEndPoint;
+    private Waypoint offsetStartPoint;
 
     public Quintic(Waypoint startPoint, Waypoint endPoint){
-
-        /* handle offset stuff */
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-
         this.angleOffset = startPoint.getAngle();
-        this.xOffset = this.startPoint.getX();
-        this.yOffset = this.startPoint.getY();
+        this.xOffset = startPoint.getX();
+        this.yOffset = startPoint.getY();
 
         this.offsetEndPoint = Waypoint.rotate(endPoint, this.angleOffset, this.xOffset, this.yOffset, false);
         this.offsetStartPoint = Waypoint.rotate(startPoint, this.angleOffset, this.xOffset, this.yOffset ,false);
@@ -73,5 +67,31 @@ public class Quintic extends Polynomial {
         double angle = Math.toDegrees(Math.atan(5*a*Math.pow(x, 4) + 4*b*Math.pow(x, 3) + 3*c*Math.pow(x, 2) + 2*d*x + e));
 
         return Waypoint.rotate(x, y, angle, angleOffset, xOffset, yOffset, true);
+    }
+
+    @Override
+    public double getLength() {
+        if (this.length > 0) {
+            return this.length;
+        }
+
+        double length = 0;
+        double deltaX = Math.abs(x1 - x0);
+
+        double lastPoint[] = new double[2];
+        double currentPoint[] = new double[2];
+
+        for (double i = 0; i <= deltaX; i += deltaX/this.samples) {
+            currentPoint[0] = i;
+            currentPoint[1] = a*Math.pow(x0 + i, 5) + b*Math.pow(x0 + i, 4) + c*Math.pow(x0 + i, 3) + d*Math.pow(x0 + i, 2) + e*(x0 + i) + f;
+
+            length += Math.sqrt(Math.pow(lastPoint[0] - currentPoint[0], 2) + Math.pow(lastPoint[1] - currentPoint[1], 2));
+
+            lastPoint[0] = currentPoint[0];
+            lastPoint[1] = currentPoint[1];
+        }
+
+        this.length = length;
+        return length;
     }
 }
