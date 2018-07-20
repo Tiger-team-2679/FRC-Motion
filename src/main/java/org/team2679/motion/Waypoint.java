@@ -2,7 +2,7 @@ package org.team2679.motion;
 
 public class Waypoint {
 
-    private double x,y,angle,velocity,acceleration,curvature = 0;
+    private double x,y,angle,curvature = 0;
 
     public Waypoint(double x, double y, double angle){
         this.x = x;
@@ -26,10 +26,19 @@ public class Waypoint {
     public double getAngle(){
         return this.angle;
     }
-    public double getVelocity() { return this.velocity; }
-    public double getAcceleration() { return this.acceleration; }
     public double getCurvature() { return this.curvature; }
 
+    public void setX(double x){
+        this.x = x;
+    }
+    public void setY(double y)
+    {
+        this.y = y;
+    }
+    public void setAngle(double angle){
+        this.angle = angle;
+    }
+    public void setCurvature(double curvature) { this.curvature = curvature; }
 
     public static Waypoint rotate(double x, double y, double angle, double angleOffset, double xOffset, double yOffset, boolean revert){
         if(revert){
