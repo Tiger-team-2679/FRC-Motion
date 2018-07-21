@@ -9,7 +9,6 @@ public class Spline {
     private SPLINE_TYPE type;
     private double length;
     private Waypoint[] waypoints;
-    private Waypoint[] samplePoints;
 
     public enum SPLINE_TYPE {
         CUBIC, QUINTIC
@@ -41,18 +40,15 @@ public class Spline {
         if(this.splines.length < 1){
             return null;
         }
-        if(this.samplePoints != null){
-            return this.samplePoints;
-        }
-        this.samplePoints = new Waypoint[amount*splines.length];
+        Waypoint[] samplePoints = new Waypoint[amount*splines.length];
         for(int i = 0; i < splines.length; i++) {
             double u = 0;
             for (int j = 0; j < amount; j += 1) {
                 u += (double) 1 / amount;
-                this.samplePoints[i*amount + j] = splines[i].getWaypointByPrecent(u);
+                samplePoints[i*amount + j] = splines[i].getWaypointByPrecent(u);
             }
         }
-        return this.samplePoints;
+        return samplePoints;
     }
 
     public Waypoint[] getWaypoints(){

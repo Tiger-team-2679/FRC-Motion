@@ -2,6 +2,7 @@ package org.team2679.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +14,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
@@ -25,12 +27,14 @@ import java.util.ArrayList;
 
 public class  Display extends Application {
 
-    private Display instance;
-    private Pane waypointsPane;
     private ArrayList<DisplayWaypoint> points;
-    private DisplaySpline spline;
+
+    private Pane waypointsPane;
+    private TextArea waypointsText;
     private Canvas canvas;
-    private Parent root;
+    private GridPane bottomGrid;
+
+    private double PIXEL_TO_METER = 920/16.4592; //supposed to be field size in pixels divided by real size in your measure units
 
     public static void startApplication(){
         launch();
@@ -38,7 +42,8 @@ public class  Display extends Application {
 
     @Override
     public void start(Stage stage) {
-        this.instance = this;
+        this.points = new ArrayList<DisplayWaypoint>();
+        Parent root;
         try {
             root = FXMLLoader.load(getClass().getResource("/interface.fxml"));
         } catch (IOException e) {
@@ -50,15 +55,46 @@ public class  Display extends Application {
         imageView.setImage(new Image("/fieldImage.png"));
 
         this.canvas = (Canvas) root.lookup("#canvas");
-        this.points = new ArrayList<DisplayWaypoint>();
+        this.waypointsPane = (Pane) root.lookup("#pane");
+        this.bottomGrid = (GridPane) root.lookup("#bottomGrid");
+        this.waypointsText = (TextArea) root.lookup("#waypointText");
 
-        updateCanvas();
         updateWaypointsPane();
+        createBottomGrid();
 
-        GridPane bottomGrid = (GridPane) root.lookup("#bottomGrid");
-        Button saveButton = new Button("save");
-        saveButton.setMaxSize(150, 21);
-        saveButton.setTranslateX(25);
+
+        stage.setTitle("Spline Planner");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    private void resetBoard(){
+        this.points = new ArrayList<>();
+        this.updateSplineDrawing();
+        this.waypointsPane.getChildren().clear();
+    }
+
+    private void toggleVisible(Node n){
+        if(n.isVisible()){
+            n.setVisible(false);
+        }
+        else{
+            n.setVisible(true);
+        }
+    }
+
+    private void createBottomGrid(){
+        Button rawButton = new Button("raw");
+        rawButton.setMaxSize(150, 21);
+        rawButton.setTranslateX(25);
+        rawButton.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent e) {
+                toggleVisible(waypointsText);
+            }
+        });
 
         Button resetButton = new Button("Reset");
         resetButton.setMaxSize(150, 31);
@@ -78,80 +114,79 @@ public class  Display extends Application {
         {
             @Override
             public void handle(MouseEvent e) {
-                toggleWaypointsPane();
+                toggleVisible(waypointsPane);
             }
         });
 
         Text  lengthBox = new Text("Path Length: 0.00");
         lengthBox.setTranslateX(25);
 
-        bottomGrid.add(saveButton, 4,0);
-        bottomGrid.add(resetButton, 3,0);
-        bottomGrid.add(toggleButton, 2,0);
-        bottomGrid.add(lengthBox, 0, 0);
-
-        stage.setTitle("Spline Planner");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
-    }
-
-    private void toggleWaypointsPane(){
-        if(this.waypointsPane.isVisible()){
-            this.waypointsPane.setVisible(false);
-        }
-        else{
-            this.waypointsPane.setVisible(true);
-        }
+        this.bottomGrid.add(rawButton, 4,0);
+        this.bottomGrid.add(resetButton, 3,0);
+        this.bottomGrid.add(toggleButton, 2,0);
+        this.bottomGrid.add(lengthBox, 0, 0);
     }
 
     private void updateWaypointsPane(){
-        this.waypointsPane = (Pane) root.lookup("#pane");
         this.waypointsPane.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent e) {
                 if(e.getButton() == MouseButton.SECONDARY) {
-                    DisplayWaypoint p = new DisplayWaypoint(e.getX(), e.getY(), 0, waypointsPane.getPrefWidth(), waypointsPane.getPrefHeight(), instance);
+                    DisplayWaypoint p = new DisplayWaypoint(e.getX(), e.getY(), 0, waypointsPane.getPrefWidth(), waypointsPane.getPrefHeight(), new Runnable() {
+                        @Override
+                        public void run() {
+                            updateSplineDrawing();
+                        }
+                    });
                     points.add(p);
                     waypointsPane.getChildren().add(p.getConnectionLine());
                     waypointsPane.getChildren().add(p.getSourcePoint());
                     waypointsPane.getChildren().add(p.getDirecionPoint());
-                    updateCanvas();
+                    updateSplineDrawing();
                 }
             }
         });
     }
 
-    private void resetBoard(){
-        this.points = new ArrayList<>();
-        this.updateCanvas();
-        this.waypointsPane.getChildren().clear();
-    }
-
-    public void updateCanvas(){
+    private void updateSplineDrawing(){
         Waypoint[] p = new Waypoint[points.size()];
-        double xOffset = 0;
-        double yOffset = 0;
-        if(this.points.size() != 0){
-            xOffset = this.points.get(0).getX();
-            yOffset = this.points.get(0).getY();
+
+        this.points.forEach(point -> {
+            p[points.indexOf(point)] = new Waypoint(point.getX()/PIXEL_TO_METER ,point.getY()/PIXEL_TO_METER, point.getAngle());
+        });
+
+        Spline spline = new Spline(p, Spline.SPLINE_TYPE.QUINTIC);
+
+        this.canvas.getGraphicsContext2D().setStroke(Color.GREEN);
+        this.canvas.getGraphicsContext2D().clearRect(0,0, this.canvas.getWidth(), this.canvas.getHeight());
+        this.canvas.getGraphicsContext2D().setLineWidth(2);
+
+        int samplesAmount = 100;
+        Waypoint[] drawPoints = spline.getSamples(samplesAmount);
+        if(drawPoints != null) {
+            for (int i = 0; i <  drawPoints.length - 1; i++) {
+                canvas.getGraphicsContext2D().strokeLine((drawPoints[i].getX()*PIXEL_TO_METER), (drawPoints[i].getY()*PIXEL_TO_METER), (drawPoints[i + 1].getX()*PIXEL_TO_METER), (drawPoints[i + 1].getY()*PIXEL_TO_METER));
+            }
         }
-        this.points.toArray(p);
-        this.spline = null;
-        this.spline = new DisplaySpline(p, Spline.SPLINE_TYPE.QUINTIC ,canvas, xOffset, yOffset);
 
-        GridPane bottomGrid = (GridPane) root.lookup("#bottomGrid");
-
-        DecimalFormat df=new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         String formate = df.format(spline.getLength());
 
-        bottomGrid.getChildren().forEach(it->{
+        this.bottomGrid.getChildren().forEach(it->{
             if( it instanceof Text){
                 if(((Text) it).getText().contains("Path Length: ")) {
                     ((Text) it).setText("Path Length: " + formate);
                 }
             }
+        });
+
+
+        this.waypointsText.clear();
+        this.points.forEach(point -> {
+            String x = df.format(point.getX()/PIXEL_TO_METER);
+            String y = df.format(point.getY()/PIXEL_TO_METER);
+            this.waypointsText.setText(this.waypointsText.getText() + "Waypoint " + (this.points.indexOf(point) + 1) + ": " + x + "x" + y + "    " + point.getAngle() + "\n");
         });
     }
 }

@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.TextArea?>
 <VBox prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #424242;">
@@ -42,6 +43,7 @@
              <StackPane prefHeight="550" prefWidth="1000">
                  <Canvas id="canvas" height="550.0" width="1000.0" />
                  <Pane id="pane" prefHeight="550" prefWidth="1000"></Pane>
+                 <TextArea id="waypointText" visible="false" editable="true"></TextArea>
              </StackPane>
          </children>
       </GridPane>
