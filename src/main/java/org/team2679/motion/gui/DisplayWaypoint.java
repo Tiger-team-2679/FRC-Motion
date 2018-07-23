@@ -15,6 +15,8 @@ public class DisplayWaypoint extends Waypoint{
     private Circle direcionPoint;
     private Line connectionLine;
 
+    private double lastXLocation, lastYLocation;
+
     public DisplayWaypoint(double x, double y, double angle, double X_BOUNDRY, double Y_BOUNDRY, Runnable runnable) {
         super(x, y, angle);
         this.X_BOUNDRY = X_BOUNDRY;
@@ -39,24 +41,25 @@ public class DisplayWaypoint extends Waypoint{
 
         runnable.run();
 
+        updateLastLocaion();
+
         this.sourcePoint.setOnMouseDragged(new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent e) {
                 double x = e.getX();
                 double y = e.getY();
-                double lastX = getX();
-                double lastY = getY();
                 setX(x);
                 setY(y);
                 Circle point = (Circle) e.getSource();
                 if(x <= X_BOUNDRY - point.getRadius() && 0 + point.getRadius() <= x && y <= Y_BOUNDRY- point.getRadius() && 0 + point.getRadius() <= y) {
                     point.setCenterX(x);
                     point.setCenterY(y);
-                    direcionPoint.setCenterX(direcionPoint.getCenterX() + x - lastX);
-                    direcionPoint.setCenterY(direcionPoint.getCenterY() + y - lastY);
+                    direcionPoint.setCenterX(direcionPoint.getCenterX() + x - lastXLocation);
+                    direcionPoint.setCenterY(direcionPoint.getCenterY() + y - lastYLocation);
                     updateConnectionLineAndAngle();
                     runnable.run();
+                    updateLastLocaion();
                 }
             }
         });
@@ -97,6 +100,10 @@ public class DisplayWaypoint extends Waypoint{
     }
     public Line getConnectionLine(){
         return this.connectionLine;
+    }
+    private void updateLastLocaion(){
+        this.lastXLocation = getX();
+        this.lastYLocation = getY();
     }
 
 }
