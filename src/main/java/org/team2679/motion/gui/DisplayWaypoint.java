@@ -1,4 +1,4 @@
-package org.team2679.gui;
+package org.team2679.motion.gui;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -45,14 +45,16 @@ public class DisplayWaypoint extends Waypoint{
             public void handle(MouseEvent e) {
                 double x = e.getX();
                 double y = e.getY();
-                direcionPoint.setCenterX(direcionPoint.getCenterX() + x - getX());
-                direcionPoint.setCenterY(direcionPoint.getCenterY() + y - getY());
+                double lastX = getX();
+                double lastY = getY();
                 setX(x);
                 setY(y);
                 Circle point = (Circle) e.getSource();
                 if(x <= X_BOUNDRY - point.getRadius() && 0 + point.getRadius() <= x && y <= Y_BOUNDRY- point.getRadius() && 0 + point.getRadius() <= y) {
                     point.setCenterX(x);
                     point.setCenterY(y);
+                    direcionPoint.setCenterX(direcionPoint.getCenterX() + x - lastX);
+                    direcionPoint.setCenterY(direcionPoint.getCenterY() + y - lastY);
                     updateConnectionLineAndAngle();
                     runnable.run();
                 }
