@@ -45,6 +45,8 @@ public class DisplayWaypoint extends Waypoint{
             public void handle(MouseEvent e) {
                 double x = e.getX();
                 double y = e.getY();
+                direcionPoint.setCenterX(direcionPoint.getCenterX() + x - getX());
+                direcionPoint.setCenterY(direcionPoint.getCenterY() + y - getY());
                 setX(x);
                 setY(y);
                 Circle point = (Circle) e.getSource();
