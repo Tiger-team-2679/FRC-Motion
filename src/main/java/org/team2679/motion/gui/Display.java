@@ -157,7 +157,7 @@ public class  Display extends Application {
             p[points.indexOf(point)] = new Waypoint(point.getX()/PIXEL_TO_METER ,point.getY()/PIXEL_TO_METER, point.getAngle());
         });
 
-        Spline spline = new Spline(p, Spline.SPLINE_TYPE.QUINTIC);
+        Spline spline = new Spline(p, Spline.SPLINE_TYPE.CUBIC);
 
         this.canvas.getGraphicsContext2D().clearRect(0,0, this.canvas.getWidth(), this.canvas.getHeight());
         this.canvas.getGraphicsContext2D().setLineWidth(2);

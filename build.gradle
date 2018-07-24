@@ -1,7 +1,3 @@
-plugins {
-    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
-}
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin'
@@ -12,16 +8,6 @@ task runGui(type:JavaExec) {
     main = "org.team2679.motion.gui.MainDisplay"
     classpath = sourceSets.main.runtimeClasspath
 }
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile wpilib()
-    compile navx()
-    compile ctre()
-
-    compile group: 'jfree', name: 'jfreechart', version: '1.0.12'
-    compile group: 'com.jfoenix', name: 'jfoenix', version: '8.0.1'
+javafx {
+    mainClass "org.team2679.motion.gui.MainDisplay"
 }
