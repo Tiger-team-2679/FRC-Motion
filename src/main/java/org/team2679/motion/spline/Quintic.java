@@ -40,8 +40,8 @@ public class Quintic extends Polynomial {
         if(angle1 >= 90 || angle1 <= -90 || angle2 >= 90 || angle2 <= -90){
             throw new RuntimeException("Angles must be relatively between -90 and 90");
         }
-        if(x0 - x1 == 0){
-            throw new RuntimeException("X value points can't be the same");
+        if(x0 >= x1){
+            throw new RuntimeException("X values must be relatively growing");
         }
 
         // calculates the equation now that it's with the offset
