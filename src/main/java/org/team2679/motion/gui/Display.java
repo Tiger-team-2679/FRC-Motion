@@ -87,7 +87,7 @@ public class  Display extends Application {
 
     private void createBottomGrid(){
         Button rawButton = new Button("raw");
-        rawButton.setMaxSize(150, 21);
+        rawButton.setMaxSize(150, 31);
         rawButton.setTranslateX(25);
         rawButton.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
@@ -200,7 +200,7 @@ public class  Display extends Application {
 
 
         this.waypointsText.clear();
-        if(!spline.isSplineSuccessfull()) {
+        if(spline.isSplineSuccessfull()) {
             this.points.forEach(point -> {
                 String x = df.format(point.getX() / PIXEL_TO_METER);
                 String y = df.format(point.getY() / PIXEL_TO_METER);
