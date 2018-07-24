@@ -5,26 +5,16 @@ A trajectiry generation library made for FRC teams.
 
 ## Table of contents
 * [FRC Motion](#frc-motion)
-* [How to work with Gradle](#how-to-work-with-gradle)
+* [Usage](#usage)
 * [Code Highlights](#code-highlights)
 * [License](#license)
 
-## How to Work With Gradle
+## Usage
+* To start the gui planner, use the following command:
 
-We can exploit the basic functionality of gradle by using the following commands:
-* In order to build the code, we will use the build command
     ```
-    $ ./gradlew build
+    $ ./gradlew  runGui
     ```
-* In order to adjust the code to a specific ide or editor, we will to following commands:
-    ```
-    # to adjust the code to IntelliJ, we will use this command:
-    $ ./gradlew idea
-    # to work with eclipse, we will use this command:
-    $ ./gradlew  eclipse
-    ```
-
-for further information about Gradle, please take a look at [the Gradle documentation](https://docs.gradle.org/current/userguide/userguide.html).
 
 ## Code Highlights
 
