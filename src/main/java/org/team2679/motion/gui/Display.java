@@ -73,6 +73,7 @@ public class  Display extends Application {
         this.points = new ArrayList<>();
         this.updateSplineDrawing();
         this.waypointsPane.getChildren().clear();
+        waypointsPane.setVisible(true);
     }
 
     private void toggleVisible(Node n){
@@ -199,7 +200,7 @@ public class  Display extends Application {
 
 
         this.waypointsText.clear();
-        if(spline.isSplineSuccessfull()) {
+        if(!spline.isSplineSuccessfull()) {
             this.points.forEach(point -> {
                 String x = df.format(point.getX() / PIXEL_TO_METER);
                 String y = df.format(point.getY() / PIXEL_TO_METER);
