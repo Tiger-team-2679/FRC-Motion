@@ -37,8 +37,9 @@ public class Quintic extends Polynomial {
         this.y1 = this.offsetEndPoint.getY();
 
         /* handle exceptions */
-        if(angle1 >= 90 || angle1 <= -90 || angle2 >= 90 || angle2 <= -90){
-            throw new RuntimeException("Angles must be relatively between -90 and 90");
+        double difference = Math.abs(angle1 - angle2);
+        if( difference <= 270 && difference >= 90){
+            throw new RuntimeException("Angle absolute difference must be below 90");
         }
         if(x0 >= x1){
             throw new RuntimeException("X values must be relatively growing");

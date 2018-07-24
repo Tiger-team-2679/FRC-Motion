@@ -89,10 +89,12 @@ public class DisplayWaypoint extends Waypoint{
         this.connectionLine.setStartY(this.sourcePoint.getCenterY());
         this.connectionLine.setEndX(this.direcionPoint.getCenterX());
         this.connectionLine.setEndY(this.direcionPoint.getCenterY());
-        int angle = (int) -(Math.toDegrees(Math.atan2(connectionLine.getEndX() - connectionLine.getStartX(), connectionLine.getEndY() - connectionLine.getStartY())) - 90);
-        if(angle < 360 && angle > 180){
-            angle -= 360;
+        int angle = (int) (Math.toDegrees(Math.atan2(connectionLine.getEndX() - connectionLine.getStartX(), connectionLine.getEndY() - connectionLine.getStartY())) - 90);
+        if(angle < 0 ){
+            angle += 360;
         }
+        angle = - angle;
+
         setAngle(angle);
     }
 
