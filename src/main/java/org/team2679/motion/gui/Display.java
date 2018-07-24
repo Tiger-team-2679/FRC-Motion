@@ -108,7 +108,7 @@ public class  Display extends Application {
             }
         });
 
-        Button toggleButton = new Button("Toggle points");
+        Button toggleButton = new Button("Toggle Waypoints");
         toggleButton.setMaxSize(150, 31);
         toggleButton.setTranslateX(25);
         toggleButton.setOnMouseClicked(new EventHandler<MouseEvent>()
