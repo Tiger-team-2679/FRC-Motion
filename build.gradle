@@ -8,6 +8,11 @@ apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.pl
 
 sourceCompatibility = 1.8
 
+task runGui(type:JavaExec) {
+    main = "org.team2679.motion.gui.MainDisplay"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 repositories {
     mavenCentral()
 }
