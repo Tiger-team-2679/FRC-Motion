@@ -17,6 +17,9 @@ public class DisplayWaypoint extends Waypoint{
 
     private double lastXLocation, lastYLocation;
 
+    private Color primaryColor = Color.BLACK;
+    private Color secondaryColor = Color.RED;
+
     public DisplayWaypoint(double x, double y, double angle, double X_BOUNDRY, double Y_BOUNDRY, Runnable runnable) {
         super(x, y, angle);
         this.X_BOUNDRY = X_BOUNDRY;
@@ -26,16 +29,17 @@ public class DisplayWaypoint extends Waypoint{
         this.sourcePoint.setRadius(10);
         this.sourcePoint.setCenterX(x);
         this.sourcePoint.setCenterY(y);
+        this.sourcePoint.setFill(primaryColor);
 
         this.direcionPoint = new Circle();
         this.direcionPoint.setRadius(7);
         this.direcionPoint.setCenterX(x + 50);
         this.direcionPoint.setCenterY(y);
-        this.direcionPoint.setFill(Color.RED);
+        this.direcionPoint.setFill(secondaryColor);
 
         this.connectionLine = new Line();
-        this.connectionLine.setFill(Color.RED);
-        this.connectionLine.setStroke(Color.RED);
+        this.connectionLine.setFill(secondaryColor);
+        this.connectionLine.setStroke(secondaryColor);
         this.connectionLine.setStrokeWidth(2);
         updateConnectionLineAndAngle();
 

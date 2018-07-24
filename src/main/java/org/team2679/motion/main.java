@@ -1,6 +1,7 @@
 package org.team2679.motion;
 
-import org.team2679.gui.Display;
+
+import org.team2679.motion.gui.Display;
 
 public class main {
     public static void main(String args[]){

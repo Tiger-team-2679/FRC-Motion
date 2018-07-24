@@ -1,4 +1,4 @@
-package org.team2679.gui;
+package org.team2679.motion.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -158,20 +158,36 @@ public class  Display extends Application {
 
         Spline spline = new Spline(p, Spline.SPLINE_TYPE.QUINTIC);
 
-        this.canvas.getGraphicsContext2D().setStroke(Color.GREEN);
         this.canvas.getGraphicsContext2D().clearRect(0,0, this.canvas.getWidth(), this.canvas.getHeight());
         this.canvas.getGraphicsContext2D().setLineWidth(2);
 
-        int samplesAmount = 100;
-        Waypoint[] drawPoints = spline.getSamples(samplesAmount);
+        // Draw the spline or if not successfull draw red line between way points
+        Waypoint[] drawPoints;
+        if(spline.isSplineSuccessfull()){
+            this.canvas.getGraphicsContext2D().setStroke(Color.LAWNGREEN);
+            int samplesAmount = 100;
+            drawPoints = spline.getSamples(samplesAmount);
+        }
+        else {
+            this.canvas.getGraphicsContext2D().setStroke(Color.RED);
+            drawPoints = spline.getWaypoints();
+        }
+
         if(drawPoints != null) {
             for (int i = 0; i <  drawPoints.length - 1; i++) {
                 canvas.getGraphicsContext2D().strokeLine((drawPoints[i].getX()*PIXEL_TO_METER), (drawPoints[i].getY()*PIXEL_TO_METER), (drawPoints[i + 1].getX()*PIXEL_TO_METER), (drawPoints[i + 1].getY()*PIXEL_TO_METER));
             }
         }
 
+        // print the length
         DecimalFormat df = new DecimalFormat("0.00");
-        String formate = df.format(spline.getLength());
+        String formate;
+        if (spline.isSplineSuccessfull()) {
+            formate = df.format(spline.getLength());
+        }
+        else {
+            formate = df.format(0);
+        }
 
         this.bottomGrid.getChildren().forEach(it->{
             if( it instanceof Text){
@@ -183,10 +199,12 @@ public class  Display extends Application {
 
 
         this.waypointsText.clear();
-        this.points.forEach(point -> {
-            String x = df.format(point.getX()/PIXEL_TO_METER);
-            String y = df.format(point.getY()/PIXEL_TO_METER);
-            this.waypointsText.setText(this.waypointsText.getText() + "Waypoint " + (this.points.indexOf(point) + 1) + ": " + x + "x" + y + "    " + point.getAngle() + "\n");
-        });
+        if(spline.isSplineSuccessfull()) {
+            this.points.forEach(point -> {
+                String x = df.format(point.getX() / PIXEL_TO_METER);
+                String y = df.format(point.getY() / PIXEL_TO_METER);
+                this.waypointsText.setText(this.waypointsText.getText() + "Waypoint " + (this.points.indexOf(point) + 1) + ": " + x + "x" + y + "    " + point.getAngle() + "\n");
+            });
+        }
     }
 }
