@@ -119,6 +119,17 @@ public class  Display extends Application {
             }
         });
 
+        Button terminateButton = new Button("Terminate");
+        terminateButton.setMaxSize(150, 31);
+        terminateButton.setTranslateX(25);
+        terminateButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.exit(0);
+            }
+        });
+
+
         Text  lengthBox = new Text("Path Length: 0.00");
         lengthBox.setTranslateX(25);
         lengthBox.setFill(Color.RED);
@@ -126,6 +137,7 @@ public class  Display extends Application {
         this.bottomGrid.add(rawButton, 4,0);
         this.bottomGrid.add(resetButton, 3,0);
         this.bottomGrid.add(toggleButton, 2,0);
+        this.bottomGrid.add(terminateButton, 1,0);
         this.bottomGrid.add(lengthBox, 0, 0);
     }
 
