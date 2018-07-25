@@ -121,7 +121,7 @@ public class  Display extends Application {
 
         Text  lengthBox = new Text("Path Length: 0.00");
         lengthBox.setTranslateX(25);
-        lengthBox.setFill(Color.WHITE);
+        lengthBox.setFill(Color.RED);
 
         this.bottomGrid.add(rawButton, 4,0);
         this.bottomGrid.add(resetButton, 3,0);
