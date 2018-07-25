@@ -21,5 +21,5 @@ A trajectiry generation library made for FRC teams.
 * Cool path maker to create and preview splines in real time.
 
 ## License
-[MIT](LICENSE) - Tiger Team #2679 - 2018
+[MIT](LICENSE) - Tiger Team #2679 - 2018.
 	
