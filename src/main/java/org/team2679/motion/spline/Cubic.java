@@ -13,4 +13,19 @@ public class Cubic extends Spline {
     public Cubic(Waypoint startPoint, Waypoint endPoint){
 
     }
+
+    @Override
+    double[] get_point_by_length(double length, double number_of_samples) {
+        return new double[0];
+    }
+
+    @Override
+    double[] get_point_by_x(double x) {
+        return new double[0];
+    }
+
+    @Override
+    double get_length(double number_of_samples) {
+        return 0;
+    }
 }
