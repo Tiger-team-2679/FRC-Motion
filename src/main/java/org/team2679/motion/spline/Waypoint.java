@@ -9,4 +9,16 @@ public class Waypoint {
         this.y = y;
         this.angle = angle;
     }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
 }
