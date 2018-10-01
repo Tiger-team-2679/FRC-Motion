@@ -1,30 +1,49 @@
 package org.team2679.motion.controls;
 
-public class PID {
-    private double lastTime = -1;
-    private double lastError;
-    private double integral;
-    private double kp;
-    private double ki;
-    private double kd;
+/**
+ * A PID controller is a control feedback loop used in control systems.
+ */
+public class PID
+{
 
-    public PID(double kp, double ki, double kd) {
-        this.lastError = 0;
-        this.integral = 0;
+    private double kp, ki, kd;
+
+    private double lastError;
+    private double lastTime;
+    private double integral;
+
+    /**
+     * create a new PID loop object
+     * @param kp
+     * @param ki
+     * @param kd
+     */
+    public PID(double kp, double ki, double kd){
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
     }
 
-    public double update(double currentPoint, double setPoint) {
-        if(lastTime == -1){
-            this.lastTime = System.nanoTime();
-        }
-        double interval = System.nanoTime() - this.lastTime;
+    /**
+     * update the pid with data and get the fix value
+     * @param time current system time
+     * @param currentPoint current system point
+     * @param setPoint current system Set point
+     * @return the fix value
+     */
+    public double update(double time, double currentPoint, double setPoint){
         double error = setPoint - currentPoint;
-        this.integral = this.integral + (error + lastError)*interval/2;
-        double derivative = (error-this.lastError)/interval;
 
-        return kp*error + ki*integral + kd*derivative;
+        double p = error;
+        double d = 0;
+        if(time - lastTime != 0 ) {
+            d = (error - lastError)/(time - lastTime);
+        }
+        integral += (error + lastError)*(time-lastTime)/2;
+
+        lastTime = time;
+        lastError = error;
+
+        return kp*p + ki*integral + kd*d;
     }
 }
