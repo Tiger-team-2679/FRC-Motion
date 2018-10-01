@@ -5,7 +5,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import org.team2679.motion.Waypoint;
 
 public class DisplayWaypoint extends Waypoint{
 

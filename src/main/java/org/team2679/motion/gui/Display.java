@@ -18,8 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
-import org.team2679.motion.Waypoint;
-import org.team2679.motion.spline.Spline;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
