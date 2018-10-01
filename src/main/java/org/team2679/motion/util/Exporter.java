@@ -49,10 +49,24 @@ public class Exporter {
     }
 
     /**
-     * adds the entire array to the exported file
+     * adds array to the exported file, with the separator between items
+     * @param args args to write
+     */
+    public void exportArray(double[] args){
+        for (int i = 0; i < args.length; i++) {
+            filePrint.print(args[i]);
+            if(i != args.length - 1){
+                filePrint.print(separator);
+            }
+        }
+        filePrint.println("");
+    }
+
+    /**
+     * adds the entire 2d array to the exported file
      * @param array the array to write
      */
-    public void exportArray(double[][] array){
+    public void export2dArray(double[][] array){
         for (int i = 0; i < array.length; i++) {
             exportPoint(array[i]);
         }
