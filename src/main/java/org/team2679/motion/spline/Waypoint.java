@@ -2,12 +2,17 @@ package org.team2679.motion.spline;
 
 public class Waypoint {
 
-    private double x, y, angle;
+    double x, y, angle = Double.NaN;
 
-    public void Waypoint(double x, double y, double angle){
+    public Waypoint(double x, double y, double angle){
         this.x = x;
         this.y = y;
         this.angle = angle;
+    }
+
+    public Waypoint(double x, double y){
+        this.x = x;
+        this.y = y;
     }
 
     public double getAngle() {

@@ -1,12 +1,22 @@
 package org.team2679.motion;
 
+import org.team2679.motion.spline.CubicSpline;
+import org.team2679.motion.spline.CubicSplinePath;
+import org.team2679.motion.spline.SplinePath;
+import org.team2679.motion.spline.Waypoint;
 import org.team2679.motion.util.Exporter;
 import org.team2679.motion.util.Math;
 
 public class main {
     public static void main(String args[]){
-        double[] value = Math.rotate_2D(10,0,0,0,2* java.lang.Math.PI);
-        System.out.println(value[0] + ", " + value[1]);
-        System.out.println(Math.radians_to_degrees(java.lang.Math.PI*2));
+        Exporter exporter = new Exporter(',', "/home/slowl0ris/Desktop", "dump");
+        try {
+            CubicSplinePath path = new CubicSplinePath( new Waypoint(0,0,0), new Waypoint(10, 10, 0));
+            System.out.println(path.get_length());
+            CubicSpline spline = new CubicSpline( new Waypoint(0,0,0), new Waypoint(10, 10, 0));
+            System.out.println(spline.interpolate(1)[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
