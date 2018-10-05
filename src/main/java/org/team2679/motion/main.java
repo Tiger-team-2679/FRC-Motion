@@ -1,22 +1,30 @@
 package org.team2679.motion;
 
-import org.team2679.motion.spline.CubicSpline;
-import org.team2679.motion.spline.CubicSplinePath;
-import org.team2679.motion.spline.SplinePath;
-import org.team2679.motion.spline.Waypoint;
-import org.team2679.motion.util.Exporter;
-import org.team2679.motion.util.Math;
+import org.team2679.motion.spline.CatmullRomSpline;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class main {
     public static void main(String args[]){
-        Exporter exporter = new Exporter(',', "/home/slowl0ris/Desktop", "dump");
-        try {
-            CubicSplinePath path = new CubicSplinePath( new Waypoint(0,0,0), new Waypoint(10, 10, 0));
-            System.out.println(path.get_length());
-            CubicSpline spline = new CubicSpline( new Waypoint(0,0,0), new Waypoint(10, 10, 0));
-            System.out.println(spline.interpolate(1)[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(new Point(0, 0));
+        points.add(new Point(2, 4));
+        points.add(new Point(4, 4));
+        points.add(new Point(6, 4));
+        points.add(new Point(8, 0));
+        double time = System.currentTimeMillis();
+        CatmullRomSpline spline = new CatmullRomSpline(points, 1000);
+        for(double i = 0; i < 1; i = i + 0.001){
+            try {
+                double x = spline.interpolate_X(i);
+                double y = spline.interpolate_Y(i);
+                System.out.println(x + ", "+ y);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(0);
+            }
         }
+        System.out.println("elapse: " + (System.currentTimeMillis() - time));
     }
 }
