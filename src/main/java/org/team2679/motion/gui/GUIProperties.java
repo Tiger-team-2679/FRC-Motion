@@ -2,7 +2,6 @@ package org.team2679.motion.gui;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class GUIProperties {
 

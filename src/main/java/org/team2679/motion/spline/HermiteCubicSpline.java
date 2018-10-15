@@ -1,7 +1,5 @@
 package org.team2679.motion.spline;
 
-import javafx.scene.layout.Pane;
-import org.team2679.motion.util.Math;
 
 import java.util.ArrayList;
 
