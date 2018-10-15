@@ -35,27 +35,6 @@ public class HermiteCubicSpline extends Spline {
         return a*t*t*t + b*t*t + c*t + d;
     }
 
-    public double[] interpolate(double percent) throws Exception {
-        /**
-        if(!Math.is_between(percent, 0, 1)){
-            throw new Exception("hermite interpolation is out of bounds");
-        }
-        double x, y = 0.0;
-
-        double tx = (this.waypoints.size() - 1)* percent;
-        int index = int(tx);
-        double t = tx - java.lang.Math.floor(tx);
-
-        std::array<float, 2> A = GetIndexClamped(points, index - 1);
-        std::array<float, 2> B = GetIndexClamped(points, index + 0);
-        std::array<float, 2> C = GetIndexClamped(points, index + 1);
-        std::array<float, 2> D = GetIndexClamped(points, index + 2);
-        x = CubicHermite(A[0], B[0], C[0], D[0], t);
-        y = CubicHermite(A[1], B[1], C[1], D[1], t);
-        **/
-        return new double[2];
-    }
-
     @Override
     public void append(Waypoint... waypoints) throws Exception {
         if(this.waypoints.size() + waypoints.length < 4){
@@ -79,4 +58,13 @@ public class HermiteCubicSpline extends Spline {
         return 0;
     }
 
+    @Override
+    public SPLINE_TYPE get_type() {
+        return null;
+    }
+
+    @Override
+    public boolean is_valid() {
+        return true;
+    }
 }

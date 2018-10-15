@@ -31,6 +31,11 @@ public class CubicSpline extends Spline {
     }
 
     @Override
+    public SPLINE_TYPE get_type() {
+        return null;
+    }
+
+    @Override
     public void append(Waypoint... waypoints) throws Exception{
         if(waypoints.length + this.path_splines.size() < 2){
             throw new Exception("can't create cubic spline path with less than 2 points");
@@ -39,6 +44,11 @@ public class CubicSpline extends Spline {
             Cubic spline = new Cubic(waypoints[i],waypoints[i + 1]);
             this.path_splines.add(spline);
         }
+    }
+
+    @Override
+    public boolean is_valid() {
+        return true;
     }
 }
 

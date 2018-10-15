@@ -3,21 +3,19 @@ package org.team2679.motion.spline;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CatmullRomSpline {
+public class CatmullRomSpline extends Spline{
 
-    private ArrayList<Point> points;
-    private ArrayList<Point> controlPoints;
-    private int nPoints;
+    private ArrayList<Waypoint> controlPoints;
 
     /**
      * Constructs a Catmull-Rom Curve
      * @param controlPoints control points of the curve
-     * @param nPoints number of points to be used when drawing the curve
      */
-    public CatmullRomSpline(ArrayList<Point> controlPoints, int nPoints) {
+    public CatmullRomSpline(ArrayList<Waypoint> controlPoints) throws Exception {
+        if(controlPoints.size() < 4){
+            throw new Exception("CatmullRom spline must have at least 4 points");
+        }
         this.controlPoints = controlPoints;
-        points = new ArrayList<Point>(nPoints);
-        this.nPoints = nPoints;
     }
 
     /**
@@ -62,12 +60,12 @@ public class CatmullRomSpline {
      * @return
      */
     public double interpolate_X(double percent) throws Exception{
-        if((int) percent > 1){
+        if(percent > 1){
             throw  new Exception("interpolation is out of bounds");
         }
         int point_index = (int)(percent/1.0*(this.controlPoints.size() - 3));
         double t = get_t_for_percent(percent);
-        Point p0, p1, p2, p3;
+        Waypoint p0, p1, p2, p3;
         p0 = controlPoints.get(point_index);
         p1 = controlPoints.get(point_index + 1);
         p2 = controlPoints.get(point_index + 2);
@@ -83,12 +81,12 @@ public class CatmullRomSpline {
      * @return
      */
     public double interpolate_Y(double percent) throws Exception {
-        if((int) percent > 1){
+        if(percent > 1){
             throw  new Exception("interpolation is out of bounds");
         }
-        int point_index = (int) (1.0 / (this.controlPoints.size() - 3)*percent);
+        int point_index = (int)(percent/1.0*(this.controlPoints.size() - 3));
         double t = get_t_for_percent(percent);
-        Point p0, p1, p2, p3;
+        Waypoint p0, p1, p2, p3;
         p0 = controlPoints.get(point_index);
         p1 = controlPoints.get(point_index + 1);
         p2 = controlPoints.get(point_index + 2);
@@ -96,6 +94,27 @@ public class CatmullRomSpline {
 
         return p0.getY()*getBlendingFunction0(t) + p1.getY()*getBlendingFunction1(t) +
                 p2.getY()*getBlendingFunction2(t) + p3.getY()*getBlendingFunction3(t);
+    }
+
+    @Override
+    public double get_length(int num_of_samples) throws Exception {
+        // TODO implement
+        return 0;
+    }
+
+    @Override
+    public SPLINE_TYPE get_type() {
+        return SPLINE_TYPE.CATMULL_ROM_SPLINE;
+    }
+
+    @Override
+    public void append(Waypoint... waypoints) throws Exception {
+        //TODO implement
+    }
+
+    @Override
+    public boolean is_valid() {
+        return true;
     }
 
     /**
