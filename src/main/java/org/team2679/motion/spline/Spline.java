@@ -3,7 +3,7 @@ package org.team2679.motion.spline;
 public abstract class Spline {
 
     public enum SPLINE_TYPE{
-        CATMULL_ROM_SPLINE;
+        CATMULL_ROM_SPLINE, CUBIC_HERMITE_SPLINE;
     }
 
     abstract public double interpolate_X(double percent) throws Exception;
