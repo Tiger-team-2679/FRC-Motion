@@ -54,7 +54,7 @@ public class Math {
     }
 
     /**
-     * returns Pythagoras law result c = sqrt(a^2 + b^2)
+     * returns Pythagoras law c = sqrt(a^2 + b^2)
      * @param x
      * @param y
      * @return the result
