@@ -18,40 +18,12 @@ public class CatmullRomSpline extends Spline{
         this.controlPoints = controlPoints;
     }
 
-    /**
-     * Returns the blending function 0 value of the Catmull-Rom Curve
-     * @param t
-     * @return blending function 0 value
-     */
-    private double getBlendingFunction0(double t) {
-        return (-1*Math.pow(t, 3) + 2*Math.pow(t, 2) - t)/2.0;
-    }
-
-    /**
-     * Returns the blending function 1 value of the Catmull-Rom Curve
-     * @param t
-     * @return blending function 1 value
-     */
-    private double getBlendingFunction1(double t) {
-        return (3*Math.pow(t, 3) - 5*Math.pow(t, 2) + 2)/2.0;
-    }
-
-    /**
-     * Returns the blending function 2 value of the Catmull-Rom Curve
-     * @param t
-     * @return blending function 2 value
-     */
-    private double getBlendingFunction2(double t) {
-        return (-3*Math.pow(t, 3) + 4*Math.pow(t, 2) + t)/2.0;
-    }
-
-    /**
-     * Returns the blending function 3 value of the Catmull-Rom Curve
-     * @param t
-     * @return blending function 3 value
-     */
-    private double getBlendingFunction3(double t) {
-        return (Math.pow(t, 3) - Math.pow(t, 2))/2.0;
+    private double solveCatmullRom(double p0, double p1, double p2, double p3, double t){
+        double a = (-1*Math.pow(t, 3) + 2*Math.pow(t, 2) - t)/2.0;
+        double b = (3*Math.pow(t, 3) - 5*Math.pow(t, 2) + 2)/2.0;
+        double c = (-3*Math.pow(t, 3) + 4*Math.pow(t, 2) + t)/2.0;
+        double d = (Math.pow(t, 3) - Math.pow(t, 2))/2.0;
+        return p0*a + p1*b + p2*c + p3*d;
     }
 
     /**
@@ -63,16 +35,14 @@ public class CatmullRomSpline extends Spline{
         if(percent > 1){
             throw  new Exception("interpolation is out of bounds");
         }
-        int point_index = (int)(percent/1.0*(this.controlPoints.size() - 3));
-        double t = get_t_for_percent(percent);
+        double[] interpolation_data = get_t_and_jump_for_percent(percent);
         Waypoint p0, p1, p2, p3;
-        p0 = controlPoints.get(point_index);
-        p1 = controlPoints.get(point_index + 1);
-        p2 = controlPoints.get(point_index + 2);
-        p3 = controlPoints.get(point_index + 3);
+        p0 = controlPoints.get((int)interpolation_data[1]);
+        p1 = controlPoints.get((int)interpolation_data[1] + 1);
+        p2 = controlPoints.get((int)interpolation_data[1] + 2);
+        p3 = controlPoints.get((int)interpolation_data[1] + 3);
 
-        return p0.getX()*getBlendingFunction0(t) + p1.getX()*getBlendingFunction1(t) +
-                p2.getX()*getBlendingFunction2(t) + p3.getX()*getBlendingFunction3(t);
+        return solveCatmullRom(p0.getX(),p1.getX(),p2.getX(),p3.getX(), interpolation_data[0]);
     }
 
     /**
@@ -84,16 +54,14 @@ public class CatmullRomSpline extends Spline{
         if(percent > 1){
             throw  new Exception("interpolation is out of bounds");
         }
-        int point_index = (int)(percent/1.0*(this.controlPoints.size() - 3));
-        double t = get_t_for_percent(percent);
+        double[] interpolation_data = get_t_and_jump_for_percent(percent);
         Waypoint p0, p1, p2, p3;
-        p0 = controlPoints.get(point_index);
-        p1 = controlPoints.get(point_index + 1);
-        p2 = controlPoints.get(point_index + 2);
-        p3 = controlPoints.get(point_index + 3);
+        p0 = controlPoints.get((int)interpolation_data[1]);
+        p1 = controlPoints.get((int)interpolation_data[1] + 1);
+        p2 = controlPoints.get((int)interpolation_data[1] + 2);
+        p3 = controlPoints.get((int)interpolation_data[1] + 3);
 
-        return p0.getY()*getBlendingFunction0(t) + p1.getY()*getBlendingFunction1(t) +
-                p2.getY()*getBlendingFunction2(t) + p3.getY()*getBlendingFunction3(t);
+        return solveCatmullRom(p0.getY(),p1.getY(),p2.getY(),p3.getY(), interpolation_data[0]);
     }
 
     @Override
@@ -118,18 +86,17 @@ public class CatmullRomSpline extends Spline{
     }
 
     /**
-     * get the right t for the interpolation by the interpolation percent
-     * @param percent
-     * @return the t value for the interpolation
+     * get the right t and jump for the interpolation by the interpolation percent
+     * @param percent of the interpolation
+     * @return an array containing t and jump in that order
      */
-    private double get_t_for_percent(double percent){
-        double t =  percent/1.0*(this.controlPoints.size() - 3);
-        if(t > 1 && t%1 == 0){
+    private double[] get_t_and_jump_for_percent(double percent){
+        double jump = (int)(percent*(controlPoints.size() - 3)/1);
+        double t = (controlPoints.size() - 3)*percent - jump;
+        if(jump > controlPoints.size() - 4){
+            jump = controlPoints.size() - 4;
             t = 1;
         }
-        else {
-            t = t%1;
-        }
-        return t;
+        return new double[]{t,jump};
     }
 }
